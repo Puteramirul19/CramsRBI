@@ -1,0 +1,81 @@
+﻿@model CramsRBIApp.ViewModel.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - CramsRBIApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CramsRBIApp.styles.css" asp-append-version="true" />
+    <!-- ================== BEGIN core-css ================== -->
+    <link href="~/assets/css/vendor.min.css" rel="stylesheet">
+    <link href="~/assets/css/app.min.css" rel="stylesheet">
+    <!-- ================== END core-css ================== -->
+</head>
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <!-- BEGIN #app -->
+            <div id="app" class="app app-full-height app-without-header">
+                <!-- BEGIN login -->
+                <div class="login">
+                    <!-- BEGIN login-content -->
+                    <div class="login-content">
+                        <form asp-controller="Account" asp-action="Login" method="post">
+                            <h1 class="text-center">Sign In</h1>
+                            <div class="text-muted text-center mb-4">
+                                For your protection, please verify your identity.
+                            </div>
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <input type="hidden" asp-for="@ViewData["ReturnUrl"]" />
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label">Email Address</label>
+                                <input asp-for="Email" class="form-control form-control-lg fs-15px" placeholder="username@address.com">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex">
+                                    <label asp-for="Password" class="form-label">Password</label>
+                                    <a href="#" class="ms-auto text-muted">Forgot password?</a>
+                                </div>
+                                <input asp-for="Password" class="form-control form-control-lg fs-15px" placeholder="Enter your password">
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input asp-for="RememberMe" class="form-check-input">
+                                    <label asp-for="RememberMe" class="form-check-label fw-500"></label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg d-block w-100 fw-500 mb-3">Sign In</button>
+                        </form>
+                    </div>
+                    <!-- END login-content -->
+                </div>
+                <!-- END login -->
+            </div>
+            <!-- END #app -->
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - CramsRBIApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- ================== BEGIN core-js ================== -->
+    <script src="~/assets/js/vendor.min.js"></script>
+    <script src="~/assets/js/app.min.js"></script>
+    <!-- ================== END core-js ================== -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

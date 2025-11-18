@@ -1,0 +1,281 @@
+﻿@model CramsRBIApp.ViewModel.RolePermissionViewModel
+@{
+    ViewData["Title"] = "Role Permissions";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Account" asp-action="RoleList">Role Management</a></li>
+            <li class="breadcrumb-item active">Role Permissions</li>
+        </ol>
+        <h1 class="page-header mb-0">
+            <i class="fa fa-shield-alt text-primary me-2"></i> Role Permissions
+        </h1>
+        <p class="text-muted">Configure permissions for each role</p>
+    </div>
+    <div class="ms-auto">
+        <a asp-controller="Account" asp-action="RoleList" class="btn btn-outline-secondary btn-lg me-2">
+            <i class="fa fa-arrow-left me-1"></i> Back to Roles
+        </a>
+        <a asp-controller="Account" asp-action="PermissionMatrix" class="btn btn-info btn-lg">
+            <i class="fa fa-table me-1"></i> Permission Matrix
+        </a>
+    </div>
+</div>
+
+<div class="card panel panel-inverse">
+    <div class="card-header bg-gradient-dark panel-heading">
+        <h4 class="panel-title text-white mb-0">
+            <i class="fa fa-cog me-2"></i> Configure Role Permissions
+        </h4>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show m-3 rounded-3 border-start border-success border-5">
+            <i class="fa fa-check-circle me-2 text-success"></i>
+            <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show m-3 rounded-3 border-start border-danger border-5">
+            <i class="fa fa-exclamation-circle me-2 text-danger"></i>
+            <strong>Error!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card-body p-4">
+        <!-- Role Selection -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Select Role:</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fa fa-user-tag"></i></span>
+                    <select id="roleSelect" class="form-select form-select-lg" onchange="loadRolePermissions()">
+                        <option value="">-- Select a Role --</option>
+                        @foreach (var role in Model.AvailableRoles)
+                        {
+                            <option value="@role.Value" selected="@role.Selected">@role.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.RoleId > 0)
+        {
+            <!-- Permission Matrix -->
+            <div class="card bg-light border rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white text-primary rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fa fa-user-tag"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">ROLE: @Model.RoleName.ToUpper()</h5>
+                            <small class="text-white text-opacity-75">Configure menu permissions for this role</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <form asp-controller="Account" asp-action="UpdateRolePermissions" method="post">
+                        <input type="hidden" asp-for="RoleId" />
+                        <input type="hidden" asp-for="RoleName" />
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover mb-0 align-middle">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th width="300" class="text-center fw-bold text-uppercase">MENU</th>
+                                        <th width="150" class="text-center fw-bold text-uppercase bg-warning text-dark">EDIT</th>
+                                        <th width="150" class="text-center fw-bold text-uppercase bg-info text-white">VIEW</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.MenuPermissions.Count; i++)
+                                    {
+                                        <tr class="@(i % 2 == 0 ? "bg-light" : "")">
+                                            <td class="fw-semibold text-uppercase ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fa @Model.MenuPermissions[i].Icon text-primary me-3 fa-lg"></i>
+                                                    @Model.MenuPermissions[i].MenuName
+                                                </div>
+                                                <input type="hidden" asp-for="MenuPermissions[i].MenuName" />
+                                                <input type="hidden" asp-for="MenuPermissions[i].DisplayName" />
+                                                <input type="hidden" asp-for="MenuPermissions[i].Icon" />
+                                            </td>
+                                            <td class="text-center bg-warning bg-opacity-10">
+                                                <div class="form-check d-flex justify-content-center">
+                                                    <input asp-for="MenuPermissions[i].CanEdit"
+                                                           class="form-check-input permission-checkbox"
+                                                           type="checkbox"
+                                                           style="width: 25px; height: 25px; background-color: #000;"
+                                                           data-menu="@Model.MenuPermissions[i].MenuName"
+                                                           data-type="edit">
+                                                </div>
+                                            </td>
+                                            <td class="text-center bg-info bg-opacity-10">
+                                                <div class="form-check d-flex justify-content-center">
+                                                    <input asp-for="MenuPermissions[i].CanView"
+                                                           class="form-check-input permission-checkbox"
+                                                           type="checkbox"
+                                                           style="width: 25px; height: 25px; background-color: #000;"
+                                                           data-menu="@Model.MenuPermissions[i].MenuName"
+                                                           data-type="view">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card-footer bg-light p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted">
+                                    <i class="fa fa-info-circle me-1"></i>
+                                    Changes will be applied immediately after saving
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-outline-secondary me-2" onclick="resetPermissions()">
+                                        <i class="fa fa-undo me-1"></i> Reset
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="fa fa-save me-1"></i> Save Permissions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- No Role Selected -->
+            <div class="text-center py-5">
+                <div class="py-5">
+                    <i class="fa fa-shield-alt fa-4x text-muted mb-3"></i>
+                    <h5>Select a Role</h5>
+                    <p class="text-muted">Choose a role from the dropdown above to configure its permissions.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Permission Legend -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="fa fa-info-circle me-2"></i>Permission Types</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-warning text-dark rounded px-2 py-1 me-2 small fw-bold">EDIT</div>
+                            <span class="small">Create, Update, Delete</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-info text-white rounded px-2 py-1 me-2 small fw-bold">VIEW</div>
+                            <span class="small">Read-only Access</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="fa fa-lightbulb me-2"></i>Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-outline-success btn-sm me-2" onclick="selectAllPermissions()">
+                    <i class="fa fa-check-double me-1"></i> Grant All
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm me-2" onclick="clearAllPermissions()">
+                    <i class="fa fa-times me-1"></i> Clear All
+                </button>
+                <button type="button" class="btn btn-outline-info btn-sm" onclick="toggleViewOnly()">
+                    <i class="fa fa-eye me-1"></i> View Only
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function loadRolePermissions() {
+            const roleId = document.getElementById('roleSelect').value;
+            if (roleId) {
+                window.location.href = '@Url.Action("RolePermissions", "Account")?roleId=' + roleId;
+            } else {
+                window.location.href = '@Url.Action("RolePermissions", "Account")';
+            }
+        }
+
+        function resetPermissions() {
+            // Reset all checkboxes to their original state
+            location.reload();
+        }
+
+        function selectAllPermissions() {
+            const checkboxes = document.querySelectorAll('.permission-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+
+        function clearAllPermissions() {
+            const checkboxes = document.querySelectorAll('.permission-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        function toggleViewOnly() {
+            // Uncheck all EDIT permissions, check all VIEW permissions
+            const editCheckboxes = document.querySelectorAll('.permission-checkbox[data-type="edit"]');
+            const viewCheckboxes = document.querySelectorAll('.permission-checkbox[data-type="view"]');
+
+            editCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            viewCheckboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+
+        // Auto-check VIEW when EDIT is checked
+        document.addEventListener('DOMContentLoaded', function() {
+            const editCheckboxes = document.querySelectorAll('.permission-checkbox[data-type="edit"]');
+
+            editCheckboxes.forEach(editCheckbox => {
+                editCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        const menu = this.getAttribute('data-menu');
+                        const viewCheckbox = document.querySelector(`.permission-checkbox[data-menu="${menu}"][data-type="view"]`);
+                        if (viewCheckbox) {
+                            viewCheckbox.checked = true;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

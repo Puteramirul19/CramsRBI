@@ -1,0 +1,183 @@
+﻿@model CramsRBIApp.ViewModel.RegisterViewModel
+@{
+    ViewData["Title"] = "User Registration";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Account" asp-action="UserList">User Management</a></li>
+            <li class="breadcrumb-item active">User Registration</li>
+        </ol>
+        <h1 class="page-header mb-0">
+            <i class="fa fa-user-plus text-primary me-2"></i> User Registration
+        </h1>
+       
+    </div>
+    <div class="ms-auto">
+        <a asp-controller="Account" asp-action="UserList" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+</div>
+
+<div class="card panel panel-inverse">
+    <div class="card-header bg-gradient-dark panel-heading">
+        
+        <h4 class="panel-title text-white">Create a New User Account</h4>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show m-3 rounded-3 border-start border-success border-5">
+            <i class="fa fa-check-circle me-2 text-success"></i>
+            <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show m-3 rounded-3 border-start border-danger border-5">
+            <i class="fa fa-exclamation-circle me-2 text-danger"></i>
+            <strong>Error!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="panel-body p-4">
+        <div class="row">
+            <div class="col-xl-8 offset-xl-2">
+                <div class="card-body bg-light p-4 rounded-3 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="fa fa-user-plus fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">New User Information</h5>
+                            <p class="text-muted mb-0">Please fill in all required fields marked with <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-controller="Account" asp-action="Register" method="post" class="form-horizontal">
+                    <div asp-validation-summary="ModelOnly" class="text-danger rounded-3 p-3 bg-danger bg-opacity-10 mb-4"></div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="FirstName" class="col-lg-4 col-form-label text-lg-end fw-semibold">First Name <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-user"></i></span>
+                                <input asp-for="FirstName" class="form-control form-control-lg" placeholder="Enter first name" />
+                            </div>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="LastName" class="col-lg-4 col-form-label text-lg-end fw-semibold">Last Name <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-user"></i></span>
+                                <input asp-for="LastName" class="form-control form-control-lg" placeholder="Enter last name" />
+                            </div>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="Email" class="col-lg-4 col-form-label text-lg-end fw-semibold">Email <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-envelope"></i></span>
+                                <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter email address" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="PhoneNumber" class="col-lg-4 col-form-label text-lg-end fw-semibold">Phone Number</label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-phone"></i></span>
+                                <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="Enter phone number" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="Password" class="col-lg-4 col-form-label text-lg-end fw-semibold">Password <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-lock"></i></span>
+                                <input asp-for="Password" class="form-control form-control-lg" placeholder="Enter password" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <small class="text-muted fst-italic">
+                                <i class="fa fa-info-circle me-1"></i> Password must be at least 8 characters and contain uppercase, lowercase, number, and special characters.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="ConfirmPassword" class="col-lg-4 col-form-label text-lg-end fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-lock"></i></span>
+                                <input asp-for="ConfirmPassword" class="form-control form-control-lg" placeholder="Confirm password" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="RoleId" class="col-lg-4 col-form-label text-lg-end fw-semibold">User Role <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-users"></i></span>
+                                <select asp-for="RoleId" asp-items="Model.AvailableRoles" class="form-select form-select-lg">
+                                    <option value="">-- Select Role --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <div class="col-lg-8 offset-lg-4">
+                            <div class="form-check d-flex align-items-center">
+                                <input asp-for="AcceptTerms" class="form-check-input me-2" style="width: 1.2em; height: 1.2em;" />
+                                <label asp-for="AcceptTerms" class="form-check-label">
+                                    I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                </label>
+                            </div>
+                            <span asp-validation-for="AcceptTerms" class="text-danger d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 mt-5">
+                        <div class="col-lg-8 offset-lg-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 me-2">
+                                <i class="fa fa-user-plus me-1"></i> Register User
+                            </button>
+                            <a asp-controller="Account" asp-action="UserList" class="btn btn-outline-secondary btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

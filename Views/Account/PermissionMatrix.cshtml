@@ -1,0 +1,292 @@
+﻿@model CramsRBIApp.ViewModel.PermissionMatrixViewModel
+@{
+    ViewData["Title"] = "Permission Matrix";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Account" asp-action="RoleList">Role Management</a></li>
+            <li class="breadcrumb-item active">Permission Matrix</li>
+        </ol>
+        <h1 class="page-header mb-0">
+            <i class="fa fa-table text-primary me-2"></i> Permission Matrix
+        </h1>
+        <p class="text-muted">Overview of all role permissions</p>
+    </div>
+    <div class="ms-auto">
+        <a asp-controller="Account" asp-action="RolePermissions" class="btn btn-outline-secondary btn-lg me-2">
+            <i class="fa fa-cog me-1"></i> Configure Permissions
+        </a>
+        <a asp-controller="Account" asp-action="RoleList" class="btn btn-outline-secondary btn-lg">
+            <i class="fa fa-arrow-left me-1"></i> Back to Roles
+        </a>
+    </div>
+</div>
+
+<div class="card panel panel-inverse">
+    <div class="card-header bg-gradient-dark panel-heading">
+        <h4 class="panel-title text-white mb-0">
+            <i class="fa fa-shield-alt me-2"></i> System Permission Overview
+        </h4>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="bg-light">
+                        <th class="text-center fw-bold text-uppercase" style="min-width: 150px;">ROLE</th>
+                        @foreach (var menu in Model.Menus)
+                        {
+                            <th class="text-center fw-bold text-uppercase" colspan="2">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="fa @menu.Icon text-primary mb-1"></i>
+                                    @menu.MenuName
+                                </div>
+                            </th>
+                        }
+                    </tr>
+                    <tr class="bg-light border-top">
+                        <th></th>
+                        @foreach (var menu in Model.Menus)
+                        {
+                            <th class="text-center small bg-warning text-dark fw-bold">EDIT</th>
+                            <th class="text-center small bg-info text-white fw-bold">VIEW</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model.Roles)
+                    {
+                        <tr>
+                            <td class="fw-bold text-uppercase bg-light text-center">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="avatar avatar-sm bg-primary text-white rounded-circle p-2 me-2 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                        <i class="fa fa-user-tag small"></i>
+                                    </div>
+                                    @role.Name
+                                </div>
+                            </td>
+                            @foreach (var menu in Model.Menus)
+                            {
+                                <td class="text-center bg-warning bg-opacity-10">
+                                    @{
+                                        var hasEditPermission = Model.PermissionMatrix.ContainsKey(role.Name) &&
+                                        Model.PermissionMatrix[role.Name].ContainsKey($"{menu.MenuName}_EDIT") &&
+                                        Model.PermissionMatrix[role.Name][$"{menu.MenuName}_EDIT"];
+                                    }
+                                    @if (hasEditPermission)
+                                    {
+                                        <div class="permission-indicator granted">
+                                            <i class="fa fa-check-square fa-lg text-success"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="permission-indicator denied">
+                                            <i class="fa fa-square fa-lg text-muted"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="text-center bg-info bg-opacity-10">
+                                    @{
+                                        var hasViewPermission = Model.PermissionMatrix.ContainsKey(role.Name) &&
+                                        Model.PermissionMatrix[role.Name].ContainsKey($"{menu.MenuName}_VIEW") &&
+                                        Model.PermissionMatrix[role.Name][$"{menu.MenuName}_VIEW"];
+                                    }
+                                    @if (hasViewPermission)
+                                    {
+                                        <div class="permission-indicator granted">
+                                            <i class="fa fa-check-square fa-lg text-success"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="permission-indicator denied">
+                                            <i class="fa fa-square fa-lg text-muted"></i>
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer bg-light p-4">
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="mb-2"><i class="fa fa-info-circle me-2"></i>Legend</h6>
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="d-flex align-items-center me-4 mb-2">
+                        <i class="fa fa-check-square fa-lg text-success me-2"></i>
+                        <span class="small">Permission Granted</span>
+                    </div>
+                    <div class="d-flex align-items-center me-4 mb-2">
+                        <i class="fa fa-square fa-lg text-muted me-2"></i>
+                        <span class="small">Permission Denied</span>
+                    </div>
+                    <div class="d-flex align-items-center me-4 mb-2">
+                        <div class="bg-warning text-dark rounded px-2 py-1 me-2 small fw-bold">EDIT</div>
+                        <span class="small">Create, Update, Delete</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="bg-info text-white rounded px-2 py-1 me-2 small fw-bold">VIEW</div>
+                        <span class="small">Read-only Access</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group">
+                    <a asp-controller="Account" asp-action="RolePermissions" class="btn btn-primary">
+                        <i class="fa fa-cog me-1"></i> Configure Permissions
+                    </a>
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" onclick="exportMatrix()"><i class="fa fa-download me-2"></i>Export Matrix</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="printMatrix()"><i class="fa fa-print me-2"></i>Print Matrix</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <div class="display-6 fw-bold">@Model.Roles.Count</div>
+                <div class="small text-white text-opacity-75">Total Roles</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <div class="display-6 fw-bold">@Model.Menus.Count</div>
+                <div class="small text-white text-opacity-75">Menu Items</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                @{
+                    int totalGranted = 0;
+                    foreach (var role in Model.Roles)
+                    {
+                        if (Model.PermissionMatrix.ContainsKey(role.Name))
+                        {
+                            totalGranted += Model.PermissionMatrix[role.Name].Values.Count(v => v);
+                        }
+                    }
+                }
+                <div class="display-6 fw-bold">@totalGranted</div>
+                <div class="small text-white text-opacity-75">Granted Permissions</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                @{
+                    int totalPossible = Model.Roles.Count * Model.Menus.Count * 2; // 2 permission types per menu
+                    int coverage = totalPossible > 0 ? (totalGranted * 100 / totalPossible) : 0;
+                }
+                <div class="display-6 fw-bold">@coverage%</div>
+                <div class="small">Permission Coverage</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .permission-indicator {
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+            .permission-indicator:hover {
+                transform: scale(1.1);
+            }
+
+        .table td, .table th {
+            vertical-align: middle;
+            padding: 0.75rem 0.5rem;
+        }
+
+        @@media print {
+            .btn, .breadcrumb, .d-flex.align-items-center.mb-4 .ms-auto
+        {
+            display: none !important;
+        }
+
+        }
+
+    </style>
+
+    <script>
+        function exportMatrix() {
+            // Create CSV content
+            let csvContent = "Role,";
+
+            // Add headers
+        @foreach (var menu in Model.Menus)
+        {
+            <text>csvContent += "@menu.MenuName EDIT,@menu.MenuName VIEW,";</text>
+        }
+            csvContent = csvContent.slice(0, -1) + "\n"; // Remove last comma and add newline
+
+            // Add data rows
+        @foreach (var role in Model.Roles)
+        {
+            <text>csvContent += "@role.Name,";</text>
+            @foreach (var menu in Model.Menus)
+            {
+                var hasEditPermission = Model.PermissionMatrix.ContainsKey(role.Name) &&
+                                      Model.PermissionMatrix[role.Name].ContainsKey($"{menu.MenuName}_EDIT") &&
+                                      Model.PermissionMatrix[role.Name][$"{menu.MenuName}_EDIT"];
+                var hasViewPermission = Model.PermissionMatrix.ContainsKey(role.Name) &&
+                                      Model.PermissionMatrix[role.Name].ContainsKey($"{menu.MenuName}_VIEW") &&
+                                      Model.PermissionMatrix[role.Name][$"{menu.MenuName}_VIEW"];
+                <text>csvContent += "@(hasEditPermission ? "Yes" : "No"),@(hasViewPermission ? "Yes" : "No"),";</text>
+            }
+            <text>csvContent = csvContent.slice(0, -1) + "\n";</text>
+        }
+
+            // Download CSV
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'permission_matrix.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function printMatrix() {
+            window.print();
+        }
+
+        // Add hover effects and tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            const indicators = document.querySelectorAll('.permission-indicator');
+            indicators.forEach(indicator => {
+                indicator.addEventListener('mouseenter', function() {
+                    this.style.cursor = 'pointer';
+                });
+            });
+        });
+    </script>
+}

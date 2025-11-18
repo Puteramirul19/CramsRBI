@@ -1,0 +1,218 @@
+﻿@model CramsRBIApp.ViewModel.RoleViewModel
+@{
+    ViewData["Title"] = "Create Role";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Account" asp-action="RoleList">Role Management</a></li>
+            <li class="breadcrumb-item active">Create Role</li>
+        </ol>
+        <h1 class="page-header mb-0">
+            <i class="fa fa-plus-circle text-primary me-2"></i> Create New Role
+        </h1>
+        <p class="text-muted">Define a new role for the system</p>
+    </div>
+    <div class="ms-auto">
+        <a asp-controller="Account" asp-action="RoleList" class="btn btn-outline-secondary btn-lg">
+            <i class="fa fa-arrow-left me-1"></i> Back to Roles
+        </a>
+    </div>
+</div>
+
+<div class="card panel panel-inverse">
+    <div class="card-header bg-gradient-dark panel-heading d-flex align-items-center">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-bs-toggle="card-collapse">
+                <i class="fa fa-minus"></i>
+            </a>
+        </div>
+        <h4 class="panel-title text-white mb-0">
+            <i class="fa fa-user-tag me-2"></i> Role Information
+        </h4>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show m-3 rounded-3 border-start border-success border-5">
+            <i class="fa fa-check-circle me-2 text-success"></i>
+            <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show m-3 rounded-3 border-start border-danger border-5">
+            <i class="fa fa-exclamation-circle me-2 text-danger"></i>
+            <strong>Error!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="panel-body p-4">
+        <div class="row">
+            <div class="col-xl-8 offset-xl-2">
+                <!-- Info Card -->
+                <div class="card-body bg-light p-4 rounded-3 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="fa fa-user-tag fa-lg"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">New Role Configuration</h5>
+                            <p class="text-muted mb-0">Please fill in all required fields marked with <span class="text-danger">*</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-controller="Account" asp-action="CreateRole" method="post" class="form-horizontal">
+                    <div asp-validation-summary="ModelOnly" class="text-danger rounded-3 p-3 bg-danger bg-opacity-10 mb-4"></div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="Name" class="col-lg-4 col-form-label text-lg-end fw-semibold">Role Name <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-user-tag"></i></span>
+                                <input asp-for="Name" class="form-control form-control-lg" placeholder="Enter role name (e.g., Administrator, Manager, User)" />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                            <small class="text-muted fst-italic">
+                                <i class="fa fa-info-circle me-1"></i> Role name should be descriptive and unique within the system.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label asp-for="Description" class="col-lg-4 col-form-label text-lg-end fw-semibold">Description <span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa fa-align-left"></i></span>
+                                <textarea asp-for="Description" class="form-control form-control-lg" rows="4" placeholder="Describe the role's purpose and responsibilities..."></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <small class="text-muted fst-italic">
+                                <i class="fa fa-info-circle me-1"></i> Provide a clear description of what this role is intended for and its main responsibilities.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Role Examples Card -->
+                    <div class="card bg-light border rounded-3 mb-4 mt-5">
+                        <div class="card-header bg-light border-bottom">
+                            <h5 class="card-title mb-0">
+                                <i class="fa fa-lightbulb text-warning me-2"></i> Role Examples
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 bg-white rounded border">
+                                        <h6 class="text-primary mb-2"><i class="fa fa-crown me-1"></i> Administrator</h6>
+                                        <p class="text-muted small mb-0">Full system access with user and role management capabilities</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 bg-white rounded border">
+                                        <h6 class="text-success mb-2"><i class="fa fa-users-cog me-1"></i> Manager</h6>
+                                        <p class="text-muted small mb-0">Supervisory role with team management and reporting access</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 bg-white rounded border">
+                                        <h6 class="text-info mb-2"><i class="fa fa-user me-1"></i> Standard User</h6>
+                                        <p class="text-muted small mb-0">Basic access to core application features and personal data</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Notice -->
+                    <div class="alert alert-info mb-4">
+                        <div class="d-flex align-items-start">
+                            <i class="fa fa-shield-alt fa-2x text-info me-3 mt-1"></i>
+                            <div>
+                                <h6 class="alert-heading mb-2">Security Notice</h6>
+                                <p class="mb-0">Roles determine what users can access and do within the system. Consider the principle of least privilege when creating new roles - only grant the minimum permissions necessary for users to perform their duties.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 mt-5">
+                        <div class="col-lg-8 offset-lg-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 me-2">
+                                <i class="fa fa-plus-circle me-1"></i> Create Role
+                            </button>
+                            <a asp-controller="Account" asp-action="RoleList" class="btn btn-outline-secondary btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            // Auto-focus on the role name field
+            $('#Name').focus();
+
+            // Character counter for description
+            const descriptionField = $('#Description');
+            const maxLength = 255;
+
+            // Add character counter
+            descriptionField.parent().append('<div class="text-end mt-1"><small class="text-muted" id="charCounter">0/' + maxLength + ' characters</small></div>');
+
+            // Update counter on input
+            descriptionField.on('input', function() {
+                const currentLength = $(this).val().length;
+                $('#charCounter').text(currentLength + '/' + maxLength + ' characters');
+
+                if (currentLength > maxLength * 0.9) {
+                    $('#charCounter').removeClass('text-muted').addClass('text-warning');
+                } else {
+                    $('#charCounter').removeClass('text-warning').addClass('text-muted');
+                }
+            });
+
+            // Form validation enhancement
+            $('form').on('submit', function(e) {
+                const roleName = $('#Name').val().trim();
+                const description = $('#Description').val().trim();
+
+                if (!roleName || !description) {
+                    e.preventDefault();
+
+                    // Show custom validation message
+                    if (!$('.alert-warning').length) {
+                        $('.panel-body').prepend(`
+                            <div class="alert alert-warning alert-dismissible fade show rounded-3 border-start border-warning border-5">
+                                <i class="fa fa-exclamation-triangle me-2 text-warning"></i>
+                                <strong>Validation Error!</strong> Please fill in all required fields before submitting.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `);
+                    }
+
+                    // Scroll to top to show error
+                    $('html, body').animate({
+                        scrollTop: $('.alert-warning').offset().top - 100
+                    }, 500);
+                }
+            });
+        });
+    </script>
+}
