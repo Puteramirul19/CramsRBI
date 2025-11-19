@@ -39,6 +39,45 @@ namespace CramsRBIApp.Controllers
 
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+            // TEMPORARY: Force create admin user for testing
+            var adminEmail = "azlia.azizi87@gmail.com";
+            var adminUser = await _userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                // Create Admin role if it doesn't exist
+                if (!await _roleManager.RoleExistsAsync("Admin"))
+                {
+                    await _roleManager.CreateAsync(new ApplicationRole("Admin")
+                    {
+                        Description = "Administrator role"
+                    });
+                }
+
+                // Create admin user
+                adminUser = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true,
+                    FirstName = "Azlia",
+                    LastName = "Azizi"
+                };
+
+                var result = await _userManager.CreateAsync(adminUser, "P@ssw0rd!");
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(adminUser, "Admin");
+                    TempData["SuccessMessage"] = "Admin user created successfully!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to create admin user: " +
+                        string.Join(", ", result.Errors.Select(e => e.Description));
+                }
+            }
+
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
