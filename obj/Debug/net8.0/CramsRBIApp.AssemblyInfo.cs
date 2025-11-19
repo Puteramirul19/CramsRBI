@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CramsRBIApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ccd80fed55c5294bbc3b565278784626a8cb07e3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+639afdf110a20242f47e8259e4050bd9f6627c19")]
 [assembly: System.Reflection.AssemblyProductAttribute("CramsRBIApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CramsRBIApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

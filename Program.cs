@@ -84,7 +84,7 @@ using (var scope = app.Services.CreateScope())
     }
 
     // Create admin user
-    var adminUser = await userManager.FindByEmailAsync("admin@example.com");
+    var adminUser = await userManager.FindByEmailAsync("azlia.azizi87@gmail.com");
     if (adminUser == null)
     {
         adminUser = new ApplicationUser
@@ -100,6 +100,14 @@ using (var scope = app.Services.CreateScope())
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+        else
+        {
+            // Log errors if user creation fails
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine($"Error creating admin user: {error.Description}");
+            }
         }
     }
 }
