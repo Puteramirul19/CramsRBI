@@ -32,7 +32,7 @@ namespace CramsRBIApp.Controllers
             return View();
         }
 
-        public IActionResult Report()
+        public IActionResult Calendar()
         {
             return View();
         }

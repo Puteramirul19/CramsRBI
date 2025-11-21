@@ -37,6 +37,32 @@ namespace CramsRBIApp.Controllers
             _logger = logger;
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                // Get user roles
+                var roles = await _userManager.GetRolesAsync(user);
+                ViewBag.UserRoles = roles.ToList();
+
+                return View(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading profile");
+                TempData["ErrorMessage"] = "An error occurred while loading your profile.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             // TEMPORARY: Force create admin user for testing
